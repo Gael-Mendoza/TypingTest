@@ -19,14 +19,43 @@
             /*color: rgb(62, 84, 139);*/
         }
 
+        #counter {
+            color: rgb(58, 58, 58);
+            color: rgb(146, 203, 223);
+            text-align: center;
+            font-size: 60px;
+            font-family: 'Source Sans Pro', sans-serif;
+            margin-bottom: 0;
+
+
+            margin-top: 3vw;
+        }
+
         #options {
-            margin-left: 47.5vw;
+            margin-left: 43vw;
+        }
+
+        #wordOptions {
+            margin-left: 1vw;
+        }
+
+        #quoteOptions {
+            margin-left: 1.5vw;
+        }
+
+        #timeOptions {
+            margin-left: 4vw;
+        }
+
+        #timeAttackOptions {
+            margin-left: 4vw;
+
         }
 
         #option {
-            
             background-color: transparent;
             color: rgb(68, 68, 68);
+            color: rgb(146, 203, 223);
 
             border: 0 solid transparent;
             font-family: 'Source Sans Pro', sans-serif;
@@ -34,12 +63,11 @@
 
             outline: none !important;
             box-shadow: none !important;
-
         }
 
         #option:hover {
 
-            transition-duration: 0.5s;
+            transition-duration: 1s;
             color: whitesmoke;
         }
 
@@ -49,17 +77,31 @@
 
         body {
             /*background-color: rgb(26, 27, 38);*/
-            background-color: rgb(17, 17, 17);
-
+            /*  background-color: rgb(17, 17, 17);*/
+            /* background-color: rgb(16, 24, 32);*/
+            background-color: rgb(27, 29, 54);
+            -webkit-touch-callout: none;
+            /* iOS Safari */
+            -webkit-user-select: none;
+            /* Safari */
+            -khtml-user-select: none;
+            /* Konqueror HTML */
+            -moz-user-select: none;
+            /* Old versions of Firefox */
+            -ms-user-select: none;
+            /* Internet Explorer/Edge */
+            user-select: none;
+            /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
         }
 
         #correct {
-            color: rgb(207, 207, 207);
+            color: rgb(252, 166, 209);
         }
 
         #highlight {
             /*background-color: rgb(110, 110, 110);*/
-            border-left: 0.1px solid white;
+            border-left: 0.1px solid rgb(252, 166, 209);
             animation-name: highlightAnim;
             animation-iteration-count: infinite;
             animation-duration: 1s;
@@ -67,12 +109,14 @@
         }
 
         @keyframes highlightAnim {
+
+
             50% {
-                border-color: rgb(110, 110, 110);
+                border-color: rgb(247, 243, 130);
             }
 
             100% {
-                border-color: white;
+                border-color: rgb(252, 166, 209);
             }
         }
 
@@ -80,23 +124,51 @@
             background-color: red;
         }
 
-        #text {
-            text-align: center;
+        .text {
+            text-align: left;
             font-size: 35px;
 
             margin-bottom: 0;
-            margin-top: 10%;
+            margin-top: 5vw;
 
             max-width: 75vw;
             margin-left: 12.5vw;
             /* color: rgb(62, 84, 139);*/
             color: rgb(68, 68, 68);
+            color: rgb(146, 203, 223);
             font-family: 'Source Sans Pro', sans-serif;
         }
 
+        #firstRowText {
+            margin-left: 12.5%;
+            /*border: 0.1px solid white;*/
+        }
+
+        #secondRowText {
+            margin-top: 0%;
+        }
+
+        #reset {
+            text-align: center;
+            color: rgb(68, 68, 68);
+            color: rgb(146, 203, 223);
+            font-size: 40px;
+            margin-top: 50px;
+            background-color: transparent;
+            border-style: none;
+            margin-left: 49vw;
+            outline: none !important;
+            box-shadow: none !important;
+        }
+
+        #reset:hover {
+            color: whitesmoke;
+            transition-duration: 0.5s;
+        }
+
         .keyMap {
-            margin-top: 100px;
-            padding-top: 5%;
+            margin-top: 30px;
+            padding-top: 2%;
             text-align: center;
         }
 
@@ -115,12 +187,14 @@
             padding: 5px;
 
             border-radius: 10%;
-            border: 2px solid rgb(68, 68, 68);
+            border: 2px solid rgb(146, 203, 223);
+            ;
 
             display: inline-block;
             font-family: 'Source Sans Pro', sans-serif;
             /*color:rgb(62, 84, 139);*/
             color: rgb(68, 68, 68);
+            color: rgb(146, 203, 223);
         }
 
         .firstRow {
@@ -145,90 +219,693 @@
             width: 150px;
             border-radius: 5%;
         }
+
+        #stats {
+            margin-top: 2vw;
+            color: rgb(146, 203, 223);
+            font-family: 'Source Sans Pro', sans-serif;
+            font-size: 30px;
+            text-align: center;
+        }
+
+        #timeAttackOptions {
+            background-color: transparent;
+            color: rgb(68, 68, 68);
+
+            border: 0 solid transparent;
+            font-family: 'Source Sans Pro', sans-serif;
+            font-size: 20px;
+
+            outline: none !important;
+            box-shadow: none !important;
+        }
     </style>
     <script>
+
+// este
+//espacio
+//es
+//para
+//que
+//sean 
+//1000
+//lineas
+//de
+//codigo
+//:)
+//;-;
+//:\
+        // calculate accuracy and words per minute
+        let correctKeyPressedCount = 0;
+        let incorrectKeyPressedCount = 0;
+        let time = 0;
+
+        let startingTime = 0;
+        let endingTime = 0;
+
+        let mode = "words";
         // current text index
         let index = 0;
+        let wordIndex = 0;
+        // how many words when the option is random word text
+        let totalNumberOfWords = 25;
+        // how long the test will be (in seconds) if the test option is time or time attack.
+        let totalSeconds = 15;
+        // how long the "player" has been typing, only used in time, and time attack
+        let currentSeconds = 0;
+        // top 1000 words, english
+        let words = [""];
+        // 1500 quotes
+        let quotes = [];
+        let tinyQuotes = [];
+        let shortQuotes = [];
+        let mediumQuotes = [];
+        let longQuotes = [];
 
-        // top 500 words, english
+        let quoteLength = 'short';
+        let randomWordLength = 25;
+        // all the words that are going to be on the test
+        let allWords = [];
+        // words in the top row
+        let currentWords = "";
+        // words in the second/bottom row
+        let nextWords = "";
 
-        let words = [' a', ' ability', ' able', ' about', ' above', ' accept', ' according', ' account', ' across', ' act', ' action', ' activity', ' actually', ' add', ' address', ' administration', ' admit', ' adult', ' affect', ' after', ' again', ' against', ' age', ' agency', ' agent', ' ago', ' agree', ' agreement', ' ahead', ' air', ' all', ' allow', ' almost', ' alone', ' along', ' already', ' also', ' although', ' always', ' American', ' among', ' amount', ' analysis', ' and', ' animal', ' another', ' answer', ' any', ' anyone', ' anything', ' appear', ' apply', ' approach', ' area', ' argue', ' arm', ' around', ' arrive', ' art', ' article', ' artist', ' as', ' ask', ' assume', ' at', ' attack', ' attention', ' attorney', ' audience', ' author', ' authority', ' available', ' avoid', ' away', ' baby', ' back', ' bad', ' bag', ' ball', ' bank', ' bar', ' base', ' be', ' beat', ' beautiful', ' because', ' become', ' bed', ' before', ' begin', ' behavior', ' behind', ' believe', ' benefit', ' best', ' better', ' between', ' beyond', ' big', ' bill', ' billion', ' bit', ' black', ' blood', ' blue', ' board', ' body', ' book', ' born', ' both', ' box', ' boy', ' break', ' bring', ' brother', ' budget', ' build', ' building', ' business', ' but', ' buy', ' by', ' call', ' camera', ' campaign', ' can', ' cancer', ' candidate', ' capital', ' car', ' card', ' care', ' career', ' carry', ' case', ' catch', ' cause', ' cell', ' center', ' central', ' century', ' certain', ' certainly', ' chair', ' challenge', ' chance', ' change', ' character', ' charge', ' check', ' child', ' choice', ' choose', ' church', ' citizen', ' city', ' civil', ' claim', ' class', ' clear', ' clearly', ' close', ' coach', ' cold', ' collection', ' college', ' color', ' come', ' commercial', ' common', ' community', ' company', ' compare', ' computer', ' concern', ' condition', ' conference', ' Congress', ' consider', ' consumer', ' contain', ' continue', ' control', ' cost', ' could', ' country', ' couple', ' course', ' court', ' cover', ' create', ' crime', ' cultural', ' culture', ' cup', ' current', ' customer', ' cut', ' dark', ' data', ' daughter', ' day', ' dead', ' deal', ' death', ' debate', ' decade', ' decide', ' decision', ' deep', ' defense', ' degree', ' Democrat', ' democratic', ' describe', ' design', ' despite', ' detail', ' determine', ' develop', ' development', ' die', ' difference', ' different', ' difficult', ' dinner', ' direction', ' director', ' discover', ' discuss', ' discussion', ' disease', ' do', ' doctor', ' dog', ' door', ' down', ' draw', ' dream', ' drive', ' drop', ' drug', ' during', ' each', ' early', ' east', ' easy', ' eat', ' economic', ' economy', ' edge', ' education', ' effect', ' effort', ' eight', ' either', ' election', ' else', ' employee', ' end', ' energy', ' enjoy', ' enough', ' enter', ' entire', ' environment', ' environmental', ' especially', ' establish', ' even', ' evening', ' event', ' ever', ' every', ' everybody', ' everyone', ' everything', ' evidence', ' exactly', ' example', ' executive', ' exist', ' expect', ' experience', ' expert', ' explain', ' eye', ' face', ' fact', ' factor', ' fail', ' fall', ' family', ' far', ' fast', ' father', ' fear', ' federal', ' feel', ' feeling', ' few', ' field', ' fight', ' figure', ' fill', ' film', ' final', ' finally', ' financial', ' find', ' fine', ' finger', ' finish', ' fire', ' firm', ' first', ' fish', ' five', ' floor', ' fly', ' focus', ' follow', ' food', ' foot', ' for', ' force', ' foreign', ' forget', ' form', ' former', ' forward', ' four', ' free', ' friend', ' from', ' front', ' full', ' fund', ' future', ' game', ' garden', ' gas', ' general', ' generation', ' get', ' girl', ' give', ' glass', ' go', ' goal', ' good', ' government', ' great', ' green', ' ground', ' group', ' grow', ' growth', ' guess', ' gun', ' guy', ' hair', ' half', ' hand', ' hang', ' happen', ' happy', ' hard', ' have', ' he', ' head', ' health', ' hear', ' heart', ' heat', ' heavy', ' help', ' her', ' here', ' herself', ' high', ' him', ' himself', ' his', ' history', ' hit', ' hold', ' home', ' hope', ' hospital', ' hot', ' hotel', ' hour', ' house', ' how', ' however', ' huge', ' human', ' hundred', ' husband', ' I', ' idea', ' identify', ' if', ' image', ' imagine', ' impact', ' important', ' improve', ' in', ' include', ' including', ' increase', ' indeed', ' indicate', ' individual', ' industry', ' information', ' inside', ' instead', ' institution', ' interest', ' interesting', ' international', ' interview', ' into', ' investment', ' involve', ' issue', ' it', ' item', ' its', ' itself', ' job', ' join', ' just', ' keep', ' key', ' kid', ' kill', ' kind', ' kitchen', ' know', ' knowledge', ' land', ' language', ' large', ' last', ' late', ' later', ' laugh', ' law', ' lawyer', ' lay', ' lead', ' leader', ' learn', ' least', ' leave', ' left', ' leg', ' legal', ' less', ' let', ' letter', ' level', ' lie', ' life', ' light', ' like', ' likely', ' line', ' list', ' listen', ' little', ' live', ' local', ' long', ' look', ' lose', ' loss', ' lot', ' love', ' low', ' machine', ' magazine', ' main', ' maintain', ' major', ' majority', ' make', ' man', ' manage', ' management', ' manager', ' many', ' market', ' marriage', ' material', ' matter', ' may', ' maybe', ' me', ' mean', ' measure', ' media', ' medical', ' meet', ' meeting', ' member', ' memory', ' mention', ' message', ' method', ' middle', ' might', ' military', ' million', ' mind', ' minute', ' miss', ' mission', ' model', ' modern', ' moment', ' money', ' month', ' more', ' morning', ' most', ' mother', ' mouth', ' move', ' movement', ' movie', ' Mr', ' Mrs', ' much', ' music', ' must', ' my', ' myself', ' name', ' nation', ' national', ' natural', ' nature', ' near', ' nearly', ' necessary', ' need', ' network', ' never', ' new', ' news', ' newspaper', ' next', ' nice', ' night', ' no', ' none', ' nor', ' north', ' not', ' note', ' nothing', ' notice', ' now', ' number', ' occur', ' of', ' off', ' offer', ' office', ' officer', ' official', ' often', ' oh', ' oil', ' ok', ' old', ' on', ' once', ' one', ' only', ' onto', ' open', ' operation', ' opportunity', ' option', ' or', ' order', ' organization', ' other', ' others', ' our', ' out', ' outside', ' over', ' own', ' owner', ' page', ' pain', ' painting', ' paper', ' parent', ' part', ' participant', ' particular', ' particularly', ' partner', ' party', ' pass', ' past', ' patient', ' pattern', ' pay', ' peace', ' people', ' per', ' perform', ' performance', ' perhaps', ' period', ' person', ' personal', ' phone', ' physical', ' pick', ' picture', ' piece', ' place', ' plan', ' plant', ' play', ' player', ' PM', ' point', ' police', ' policy', ' political', ' politics', ' poor', ' popular', ' population', ' position', ' positive', ' possible', ' power', ' practice', ' prepare', ' present', ' president', ' pressure', ' pretty', ' prevent', ' price', ' private', ' probably', ' problem', ' process', ' produce', ' product', ' production', ' professional', ' professor', ' program', ' project', ' property', ' protect', ' prove', ' provide', ' public', ' pull', ' purpose', ' push', ' put', ' quality', ' question', ' quickly', ' quite', ' race', ' radio', ' raise', ' range', ' rate', ' rather', ' reach', ' read', ' ready', ' real', ' reality', ' realize', ' really', ' reason', ' receive', ' recent', ' recently', ' recognize', ' record', ' red', ' reduce', ' reflect', ' region', ' relate', ' relationship', ' religious', ' remain', ' remember', ' remove', ' report', ' represent', ' Republican', ' require', ' research', ' resource', ' respond', ' response', ' responsibility', ' rest', ' result', ' return', ' reveal', ' rich', ' right', ' rise', ' risk', ' road', ' rock', ' role', ' room', ' rule', ' run', ' safe', ' same', ' save', ' say', ' scene', ' school', ' science', ' scientist', ' score', ' sea', ' season', ' seat', ' second', ' section', ' security', ' see', ' seek', ' seem', ' sell', ' send', ' senior', ' sense', ' series', ' serious', ' serve', ' service', ' set', ' seven', ' several', ' sex', ' sexual', ' shake', ' share', ' she', ' shoot', ' short', ' shot', ' should', ' shoulder', ' show', ' side', ' sign', ' significant', ' similar', ' simple', ' simply', ' since', ' sing', ' single', ' sister', ' sit', ' site', ' situation', ' six', ' size', ' skill', ' skin', ' small', ' smile', ' so', ' social', ' society', ' soldier', ' some', ' somebody', ' someone', ' something', ' sometimes', ' son', ' song', ' soon', ' sort', ' sound', ' source', ' south', ' southern', ' space', ' speak', ' special', ' specific', ' speech', ' spend', ' sport', ' spring', ' staff', ' stage', ' stand', ' standard', ' star', ' start', ' state', ' statement', ' station', ' stay', ' step', ' still', ' stock', ' stop', ' store', ' story', ' strategy', ' street', ' strong', ' structure', ' student', ' study', ' stuff', ' style', ' subject', ' success', ' successful', ' such', ' suddenly', ' suffer', ' suggest', ' summer', ' support', ' sure', ' surface', ' system', ' table', ' take', ' talk', ' task', ' tax', ' teach', ' teacher', ' team', ' technology', ' television', ' tell', ' ten', ' tend', ' term', ' test', ' than', ' thank', ' that', ' the', ' their', ' them', ' themselves', ' then', ' theory', ' there', ' these', ' they', ' thing', ' think', ' third', ' this', ' those', ' though', ' thought', ' thousand', ' threat', ' three', ' through', ' throughout', ' throw', ' thus', ' time', ' to', ' today', ' together', ' tonight', ' too', ' top', ' total', ' tough', ' toward', ' town', ' trade', ' traditional', ' training', ' travel', ' treat', ' treatment', ' tree', ' trial', ' trip', ' trouble', ' true', ' truth', ' try', ' turn', ' TV', ' two', ' type', ' under', ' understand', ' unit', ' until', ' up', ' upon', ' us', ' use', ' usually', ' value', ' various', ' very', ' victim', ' view', ' violence', ' visit', ' voice', ' vote', ' wait', ' walk', ' wall', ' want', ' war', ' watch', ' water', ' way', ' we', ' weapon', ' wear', ' week', ' weight', ' well', ' west', ' western', ' what', ' whatever', ' when', ' where', ' whether', ' which', ' while', ' white', ' who', ' whole', ' whom', ' whose', ' why', ' wide', ' wife', ' will', ' win', ' wind', ' window', ' wish', ' with', ' within', ' without', ' woman', ' wonder', ' word', ' work', ' worker', ' world', ' worry', ' would', ' write', ' writer', ' wrong', ' yard', ' yeah', ' year', ' yes', ' yet', ' you', ' young', ' your', 'yourself']
+        var timer;
+        var increasingTimer;
+        // if true choose random words from words array else choose random quote from quote array
+        let randomWords = true;
 
         window.onload = function () {
             document.addEventListener("keydown", keyPush);
-            ResetText();
+            ChangeSeparateOptionPosition('word');
+            SetDefaultColor();
+            getJsonNoAsync();
+
         }
-        function ResetText(textLength = 10) {
-            // set text to be random words
-            document.getElementById("text").innerText = "";
-            for (let index = 0; index < textLength; index++) {
-                document.getElementById("text").innerText += " " + words[Math.floor((Math.random() * 500))]
+        // get words and quotes from json
+        function getJsonNoAsync() {
+
+            // get json file, and set varibles
+            let request = new XMLHttpRequest()
+            request.open('GET', "words.json");
+            request.responseType = 'json';
+            request.send();
+
+            request.onload = function () {
+                const allWords = request.response;
+                words = allWords[0].TopWords;
+
+
+                for (let index = 0; index < allWords[1].quotes.length; index++) {
+                    quotes.push(allWords[1].quotes[index].quote);
+                }
+
+
+                for (let index = 0; index < quotes.length; index++) {
+
+                    if (quotes[index].length <= 50) {
+                        tinyQuotes.push(quotes[index]);
+                    }
+                    else if (quotes[index].length < 150 && quotes[index].length >= 50) {
+                        shortQuotes.push(quotes[index]);
+                    }
+                    else if (quotes[index].length >= 150 && quotes[index].length < 300) {
+                        mediumQuotes.push(quotes[index]);
+                    }
+                    else {
+                        longQuotes.push(quotes[index]);
+                    }
+
+                }
+                ResetText(randomWordLength);
             }
-            document.getElementById("text").style.maxWidth = '75vw';
-            document.getElementById("text").style.marginLeft = '12.5vw';
         }
+        //typing
+        function ResetText(textLength = totalNumberOfWords) {
+
+            clearTimeout(increasingTimer);
+            clearTimeout(timer);
+
+            time = 0;
+            correctKeyPressedCount = 0;
+            incorrectKeyPressedCount = 0;
+
+            // set text to be random wor
+            document.getElementById("firstRowText").style.maxWidth = '75vw';
+            document.getElementById("firstRowText").style.marginLeft = '12.5vw';
+
+            document.getElementById("secondRowText").style.maxWidth = '75vw';
+
+            // reset varibles
+            allWords = [];
+            index = 0;
+            wordIndex = 0;
+
+            document.getElementById("firstRowText").innerText = "";
+            document.getElementById("secondRowText").innerText = "";
+
+            clearTimeout(timer);
+            currentSeconds = 0;
+
+            if (mode != "quotes") {
+                if (mode == "timed") {
+                    clearTimeout(timer);
+                    currentSeconds = 0;
+                    textLength = 300
+                }
+                else if (mode == "timeAttack") {
+                    clearTimeout(timer);
+                    currentSeconds = 0;
+                }
+                totalNumberOfWords = textLength;
+                nextWords = "";
+                currentWords = "";
+
+                for (let index = 0; index < textLength; index++) {
+                    let randomIndex = Math.floor((Math.random() * words.length));
+                    document.getElementById("firstRowText").innerText += " " + words[randomIndex];
+
+                    // get the words in the second row of text
+                    if (document.getElementById("firstRowText").clientHeight > 44) {
+
+                        document.getElementById("secondRowText").innerText += " " + words[randomIndex];
+
+                        if (document.getElementById("secondRowText").clientHeight == 44) {
+                            nextWords += words[randomIndex] + " ";
+                        }
+                        else {
+                            allWords.push(words[randomIndex]);
+                        }
+
+                    }
+                    // get the words in the first row
+                    else if (document.getElementById("firstRowText").clientHeight == 44) {
+                        currentWords += words[randomIndex] + " ";
+                    }
+                }
+
+                document.getElementById("firstRowText").innerText = currentWords;
+                document.getElementById("secondRowText").innerText = nextWords;
+            }
+            else if (mode = "quotes") {
+                let index = 0;
+                let newAllWords = [];
+                let lastSpaceIndex = 0;
+                let nextSpaceIndex = 0;
+                allWords = [];
+                let entireQuote = "";
+                nextWords = "";
+                currentWords = "";
+
+                switch (quoteLength) {
+                    case 'tiny':
+                        index = Math.floor((Math.random() * tinyQuotes.length));
+                        entireQuote = tinyQuotes[index];
+                        break;
+                    case 'short':
+                        index = Math.floor((Math.random() * shortQuotes.length));
+                        entireQuote = shortQuotes[index];
+                        break;
+                    case 'medium':
+                        index = Math.floor((Math.random() * mediumQuotes.length));
+                        entireQuote = mediumQuotes[index];
+                        break;
+                    case 'long':
+                        index = Math.floor((Math.random() * longQuotes.length));
+                        entireQuote = longQuotes[index];
+                        break;
+                    case 'all':
+                        index = Math.floor((Math.random() * quotes.length));
+                        entireQuote = quotes[index];
+                        break;
+                }
+
+
+
+                index = 0;
+                totalNumberOfWords = 1;
+
+                while (index < entireQuote.length) {
+                    if (entireQuote.charAt(index) == ' ') {
+                        totalNumberOfWords++;
+                        nextSpaceIndex = index;
+                        allWords.push(entireQuote.substring(lastSpaceIndex, nextSpaceIndex));
+                        lastSpaceIndex = nextSpaceIndex;
+                    }
+                    index++;
+                }
+
+                allWords.push(entireQuote.substring(lastSpaceIndex, index));
+
+                for (let index = 0; index < allWords.length; index++) {
+
+                    document.getElementById("firstRowText").innerText += " " + allWords[index];
+
+                    // get the words in the second row of text
+                    if (document.getElementById("firstRowText").clientHeight >= 88) {
+
+                        document.getElementById("secondRowText").innerText += " " + allWords[index];
+
+                        if (document.getElementById("secondRowText").clientHeight == 44) {
+                            nextWords += allWords[index] + " ";
+                        }
+                        else {
+                            newAllWords.push(allWords[index]);
+                        }
+
+                    }
+                    // get the words in the first row
+                    else if (document.getElementById("firstRowText").clientHeight == 44) {
+                        currentWords += allWords[index] + " ";
+                    }
+
+                }
+                allWords = newAllWords;
+                document.getElementById("firstRowText").innerText = currentWords;
+                document.getElementById("secondRowText").innerText = nextWords;
+            }
+
+
+            document.getElementById("firstRowText").style.maxWidth = '75vw';
+            document.getElementById("firstRowText").style.marginLeft = '12.5vw';
+
+            document.getElementById("secondRowText").style.maxWidth = '75vw';
+            // document.getElementById("secondRowText").style.marginLeft = '12.5vw';
+
+            if (document.getElementById("secondRowText").innerText.length == 0) {
+                document.getElementById("firstRowText").style.textAlign = 'center';
+            }
+            else {
+                document.getElementById("firstRowText").style.textAlign = 'left';
+            }
+            if (mode != "timed" && mode != "timeAttack") {
+                document.getElementById("counter").innerText = "0 / " + totalNumberOfWords;
+            }
+            else {
+                document.getElementById("counter").innerText = totalSeconds;
+            }
+
+
+        }
+        function SetText() {
+            // set the text in the second row to be in the first row and put the next text in the second row
+            wordIndex++;
+            if (mode != "timed" && mode != "timeAttack") {
+                document.getElementById("counter").innerText = wordIndex + " / " + totalNumberOfWords;
+                WordCompletedAnimation();
+            }
+
+
+            document.getElementById("secondRowText").style.maxWidth = '75vw';
+            document.getElementById("secondRowText").style.marginLeft = '12.5vw';
+
+            if (document.getElementById("secondRowText").innerText.length > 0) {
+
+                document.getElementById("firstRowText").innerText = document.getElementById("secondRowText").innerText;
+                nextWords = "";
+
+                let newAllWords = [];
+                document.getElementById("secondRowText").innerText = "";
+                for (let index = 0; index < allWords.length; index++) {
+
+                    document.getElementById("secondRowText").innerText += " " + allWords[index];
+
+                    if (document.getElementById("secondRowText").clientHeight == 44) {
+                        nextWords += allWords[index] + " ";
+                    }
+
+                    else if (document.getElementById("secondRowText").clientHeight > 44) {
+                        newAllWords.push(allWords[index]);
+                    }
+
+                }
+                allWords = [newAllWords][0];
+                document.getElementById("secondRowText").innerText = nextWords;
+
+                document.getElementById("firstRowText").style.maxWidth = '75vw';
+                document.getElementById("firstRowText").style.marginLeft = '12.5vw';
+
+                document.getElementById("secondRowText").style.maxWidth = '75vw';
+                document.getElementById("secondRowText").style.marginLeft = '12.5vw';
+            }
+            else {
+                CalculateAcurracyAndWpm();
+                ResetText(randomWordLength);
+            }
+
+        }
+        function CheckIfCorrect(keyPressed) {
+            // check if the keypressed is equal to the right key
+            let currentText = document.getElementById("firstRowText").innerText;
+            let currentChar = currentText.toString().charAt(index)
+
+            let correctColor = "rgb(252, 166, 209)";
+            let incorrectColor = "rgb(247, 243, 130)";
+
+            if (keyPressed == currentChar) {
+                correctKeyPressedCount++;
+                if (index == 0) {
+                    if (mode == "words" || mode == "quotes") {
+                        increasingTimer = setTimeout(AddTime, 1000);
+                    }
+                    else if (index == 0 && mode == "timed") {
+                        timer = setTimeout(DecreseTime, 1000);
+                    }
+                    else if (index == 0 && mode == "timeAttack") {
+                        timer = setTimeout(DecreseTime, 1000);
+                    }
+                }
+
+                if (keyPressed == " ") {
+                    wordIndex++;
+                    if (mode == "words") {
+                        document.getElementById("counter").innerText = wordIndex + " / " + totalNumberOfWords;
+                        WordCompletedAnimation();
+                    }
+
+                }
+                index++;
+
+                startingHtml = "<div id = 'firstRowText'><span id = 'correct'>" + currentText.substring(0, index - 1) + currentText.substring(index - 1, index) + "</span>";
+                higlightHtml = "<span id = 'highlight'>" + currentText.substring(index, index + 1) + "</span>";
+                endingHtml = currentText.substring(index + 1) + "</div>";
+
+                document.getElementById("firstRowText").innerHTML = startingHtml + higlightHtml + endingHtml;
+
+                if (document.getElementById("firstRowText").style.textAlign == 'left') {
+                    document.getElementById("firstRowText").style.marginLeft = '0vw';
+                    document.getElementById("firstRowText").style.maxWidth = '100vw';
+                }
+                else {
+                    document.getElementById("firstRowText").style.marginLeft = '7.75vw';
+                }
+
+                SetAnimation(letter, correctColor, 200)
+            }
+            else {
+                incorrectKeyPressedCount++;
+                SetAnimation(letter, incorrectColor, 200)
+            }
+            if (index >= currentText.length) {
+
+                SetText();
+                index = 0;
+            }
+
+        }
+        function SetTextType(gameMode = "words", buttonName = 'word') {
+            mode = gameMode;
+
+            ChangeSeparateOptionPosition(buttonName);
+
+            ResetText(randomWordLength);
+            document.getElementById('options').blur();
+        }
+        // calculate accuracy and words per minute
+        function CalculateAcurracyAndWpm(passed = true) {
+
+            let passedColor = "rgb(252, 166, 209)";
+            let failedColor = "rgb(247, 243, 130)";
+
+            clearTimeout(increasingTimer);
+            clearTimeout(timer);
+            if (mode == "timeAttack" && currentSeconds != 0) {
+                time = currentSeconds;
+            }
+            console.log("total time: " + time);
+
+            let wpm = ((correctKeyPressedCount / 5) / (time / 60));
+
+
+            let accuracy = ((correctKeyPressedCount - incorrectKeyPressedCount) / correctKeyPressedCount) * 100;
+
+            if (accuracy.toString().length > 3) {
+                accuracy = accuracy.toString().substring(0, 4);
+            }
+            document.getElementById("stats").textContent = " Past test --> wpm: " + Math.trunc(wpm) + " accuracy: " + accuracy + "%";
+            if (mode == "timed") {
+                document.getElementById("stats").style.color = "rgb(146, 203, 223)"
+            }
+            else if (mode == "timeAttack") {
+                if (passed) {
+                    document.getElementById("stats").style.color = passedColor;
+                }
+                else {
+                    document.getElementById("stats").style.color = failedColor;
+                    ResetText();
+                }
+            }
+            time = 0;
+            console.log("_____________________________________");
+        }
+        //timer
+        function DecreseTime() {
+            if (currentSeconds < totalSeconds - 1) {
+                currentSeconds++;
+                console.log(mode + " : " + currentSeconds);
+                document.getElementById("counter").innerText = totalSeconds - currentSeconds;
+                clearTimeout(timer);
+                timer = setTimeout(DecreseTime, 1000);
+            }
+            else {
+
+                time = currentSeconds;
+                currentSeconds = 0;
+                if (mode == "timeAttack") {
+                    CalculateAcurracyAndWpm(false);
+                }
+                else {
+                    CalculateAcurracyAndWpm(true);
+                }
+                ResetText();
+                document.getElementById("counter").innerText = totalSeconds;
+            }
+        }
+        function AddTime() {
+            time++;
+            console.log(mode + " : " + time);
+            increasingTimer = setTimeout(AddTime, 1000);
+        }
+        // seting options
+        function SetQuoteLength(length) {
+            quoteLength = length;
+            document.getElementById('options').blur();
+            ResetText(randomWordLength);
+        }
+        function SetTextLength(settingLength = 0) {
+            randomWordLength = settingLength;
+            document.getElementById('option').blur();
+
+
+            ResetText(randomWordLength);
+        }
+        function SetSecondLength(howMuchSeconds = 0) {
+            totalSeconds = howMuchSeconds;
+            if (mode == "timeAttack") {
+                ResetText(totalNumberOfWords);
+            }
+            else {
+                ResetText();
+            }
+            document.getElementById("counter").innerText = totalSeconds;
+        }
+        function CustomTextLength(modeType, message = "number of words", startingValue = "20") {
+            var response = prompt(message, startingValue)
+
+            if (response == null || response == "" || isNaN(response) == true || +response >= 1000) {
+
+            }
+            else {
+                if (modeType == "words") {
+                    SetTextLength(+response);
+                }
+                else if (modeType == "timed") {
+                    SetSecondLength(+response);
+                }
+            }
+        }
+        //input
         function keyPush(evt) {
             // agarrar input
             keyId = "key" + String.fromCharCode(evt.keyCode)
 
             if (evt.keyCode == 32) {
                 keyId = "space";
-                letter.style.width = 1000;
-            }
 
+            }
             letter = document.getElementById(keyId);
 
             CheckIfCorrect(evt.key)
 
         }
+        //animation
         function SetAnimation(letter, animationColor, animationDuration = 1000) {
 
             // lo que esta en los square brackes es lo que va a cambiar y lo que no es cosas como la duration y iteration
-            letter.animate
-                (
-                    [{ backgroundColor: animationColor }],
-                    { duration: animationDuration, iteration: 1 }
-                )
+            if (letter != null) {
+                letter.animate
+                    (
+                        [{ backgroundColor: animationColor }],
+                        { duration: animationDuration, iteration: 1 }
+                    )
+                setTimeout(function () {
+                    letter.style.backgroundColor = animationColor; letter.animate
+                        (
+                            [{ backgroundColor: 'transparent' }],
+                            { duration: animationDuration, iteration: 1 }
 
-            letter.style.backgroundColor = animationColor;
+                        )
+                }, animationDuration)
 
-            letter.animate
-                (
-                    [{ backgroundColor: 'transparent' }],
-                    { duration: animationDuration, iteration: 1 }
 
-                )
-            letter.style.backgroundColor = 'transparent';
+                setTimeout(function () { letter.style.backgroundColor = 'transparent'; }, animationDuration * 2);
+
+            }
+
 
         }
-        function CheckIfCorrect(keyPressed) {
+        function ChangeColor(buttonName) {
 
-            let currentText = document.getElementById("text").innerText;
-            let currentChar = currentText.toString().charAt(index)
-
-            if (keyPressed == currentChar) {
-
-                index++;
-
-                startingHtml = "<div id = 'text'><span id = 'correct'>" + currentText.substring(0, index - 1) + currentText.substring(index - 1, index) + "</span>";
-                higlightHtml = "<span id = 'highlight'>" + currentText.substring(index, index + 1) + "</span>";
-                endingHtml = currentText.substring(index + 1) + "</div>";
-
-                document.getElementById("text").innerHTML = startingHtml + higlightHtml + endingHtml;
-                document.getElementById("text").style.maxWidth = '100vw';
-                document.getElementById("text").style.marginLeft = '0vw';
-                SetAnimation(letter, 'white', 400)
+            for (let index = 0; index < document.getElementById("options").children.length; index++) {
+                document.getElementById("options").children.item(index).style.color = 'rgb(68, 68, 68)';
             }
-            else {
-                SetAnimation(letter, 'red', 600)
-            }
-            if (index >= currentText.length) {
-                ResetText();
-                index = 0;
-            }
+
+            document.getElementsByName(buttonName).item(0).style.color = 'white';
 
         }
+        function WordCompletedAnimation() {
+            let toColor = "rgb(252, 166, 209)"
+            let defaultColor = "rgb(146, 203, 223)";
 
+            let initialLength = 100;
+            let endingLength = 300;
+            document.getElementById("counter").animate(
+                [{ color: toColor }],
+                {
+                    duration: initialLength,
+                    iteration: 1
+                }
+            )
+            setTimeout(function () { document.getElementById("counter").style.color = toColor; }, initialLength);
+
+            //   document.getElementById("counter").style.marginLeft = '45vw'
+            //   document.getElementById("counter").style.marginTop = '2.5vw'
+            setTimeout(function () {
+                document.getElementById("counter").animate(
+                    [{ color: defaultColor }],
+                    {
+                        duration: endingLength,
+                        iteration: 1
+                    })
+            }, initialLength);
+
+            // document.getElementById("counter").animate(
+            // [{ color: defaultColor }],
+            // {
+            //    duration: 300,
+            //    iteration: 1
+            // }
+            // 
+            //)
+            setTimeout(function () { document.getElementById("counter").style.color = defaultColor; }, initialLength + endingLength);
+
+        }
+        function ChangeOnPress(typeOfOption = "main", optionIndex) {
+            let defaultColor = "rgb(146, 203, 223)";
+            let selectedColor = "rgb(252, 166, 209)";
+
+            if (typeOfOption == "main") {
+                for (let index = 0; index < document.getElementsByClassName("mainOption").length; index++) {
+                    document.getElementsByClassName("mainOption").item(index).style.color = defaultColor;
+
+                }
+                document.getElementsByClassName("mainOption").item(optionIndex).style.color = selectedColor;
+
+                SetDefaultColor();
+            }
+            else if (typeOfOption == "minor") {
+                for (let index = 0; index < document.getElementsByClassName("minorOption").length; index++) {
+                    document.getElementsByClassName("minorOption").item(index).style.color = defaultColor;
+
+                }
+                document.getElementsByClassName("minorOption").item(optionIndex).style.color = selectedColor;
+            }
+            else if (typeOfOption == "text") {
+                for (let index = 0; index < document.getElementsByClassName("timeAttackTextOption").length; index++) {
+                    document.getElementsByClassName("timeAttackTextOption").item(index).style.color = defaultColor;
+
+                }
+                document.getElementsByClassName("timeAttackTextOption").item(optionIndex).style.color = selectedColor;
+            }
+            else if (typeOfOption == "seconds") {
+                for (let index = 0; index < document.getElementsByClassName("timeAttackSecondsOption").length; index++) {
+                    document.getElementsByClassName("timeAttackSecondsOption").item(index).style.color = defaultColor;
+
+                }
+                document.getElementsByClassName("timeAttackSecondsOption").item(optionIndex).style.color = selectedColor;
+            }
+        }
+        // set seperate options
+        function ChangeSeparateOptionPosition(buttonPressed) {
+
+            let wordOption = "<div id= 'wordOptions'>  <button class = 'minorOption' id='option' onclick =" + '"' + " SetTextLength(10),  ChangeOnPress('minor', '0')" + '"' + "> 10 </button> <button class = 'minorOption' id='option' onclick =" + '"' + " SetTextLength(25),  ChangeOnPress('minor', '1')" + '"' + "> 25 </button> <button class = 'minorOption' id='option' onclick =" + '"' + " SetTextLength(50),  ChangeOnPress('minor', '2')" + '"' + "> 50 </button> <button class = 'minorOption' id='option' onclick =" + '"' + " SetTextLength(100),  ChangeOnPress('minor', '3')" + '"' + "> 100 </button> <button class = 'minorOption' id='option' onclick =" + '"' + " CustomTextLength('words'),  ChangeOnPress('minor', '4')" + '"' + "> custom </button> </div>";
+            let quoteOption = "<div id='quoteOptions'> <button class = 'minorOption' id='option' onclick =" + '"' + " SetQuoteLength('all'),  ChangeOnPress('minor', '0')" + '"' + "> all </button> <button class = 'minorOption' id='option' onclick =" + '"' + " SetQuoteLength('tiny'),  ChangeOnPress('minor', '1')" + '"' + "> tiny </button> <button class = 'minorOption' id='option'  onclick =" + '"' + " SetQuoteLength('short'),  ChangeOnPress('minor', '2')" + '"' + "> short </button> <button class = 'minorOption' id='option'  onclick =" + '"' + " SetQuoteLength('medium'),  ChangeOnPress('minor', '3')" + '"' + "> medium </button><button class = 'minorOption' id='option'  onclick =" + '"' + " SetQuoteLength('long'),  ChangeOnPress('minor', '4')" + '"' + "> long </button></div>";
+            let timeOption = "<div id='timeOptions'><button class = 'minorOption' id='option' onclick =" + '"' + " SetSecondLength(15),  ChangeOnPress('minor', '0')" + '"' + "> 15 </button><button class = 'minorOption' id='option'  onclick =" + '"' + " SetSecondLength(30),  ChangeOnPress('minor', '1')" + '"' + "> 30 </button><button class = 'minorOption' id='option'  onclick =" + '"' + " SetSecondLength(60),  ChangeOnPress('minor', '2')" + '"' + "> 60 </button><button class = 'minorOption' id='option'  onclick =" + '"' + " CustomTextLength('timed', 'number of seconds'),  ChangeOnPress('minor', '3')" + '"' + "> custom </button></div>";
+            let timeAttackOption = "<div id='timeAttackOptions' style = ' color: rgb(146, 203, 223);'>  text: <button class = 'timeAttackTextOption' id='option' onclick =" + '"' + " SetTextLength(10),  ChangeOnPress('text', '0')" + '"' + "> 10 </button> <button class = 'timeAttackTextOption' id='option' onclick =" + '"' + " SetTextLength(25),  ChangeOnPress('text', '1')" + '"' + "> 25 </button> <button class = 'timeAttackTextOption' id='option' onclick =" + '"' + " SetTextLength(50),  ChangeOnPress('text', '2')" + '"' + "> 50 </button>  <button class = 'timeAttackTextOption' id='option' onclick =" + '"' + " CustomTextLength('words'),  ChangeOnPress('text', '3')" + '"' + "> custom </button> <br> seconds: <button class = 'timeAttackSecondsOption' id='option' onclick =" + '"' + " SetSecondLength(15),  ChangeOnPress('seconds', '0')" + '"' + "> 15 </button><button class = 'timeAttackSecondsOption' id='option'  onclick =" + '"' + " SetSecondLength(30),  ChangeOnPress('seconds', '1')" + '"' + "> 30 </button><button class = 'timeAttackSecondsOption' id='option'  onclick =" + '"' + " SetSecondLength(60),  ChangeOnPress('seconds', '2')" + '"' + "> 60 </button> <button class = 'timeAttackSecondsOption' id='option'  onclick =" + '"' + " CustomTextLength('timed', 'number of seconds'),  ChangeOnPress('seconds', '3')" + '"' + "> custom </button> </div>";
+
+            let seperateOptions = "";
+
+            switch (buttonPressed) {
+                case "word":
+                    seperateOptions = "<div id = 'seperateOptions'>" + wordOption + "</div>";
+                    break;
+                case "quote":
+                    seperateOptions = "<div id = 'seperateOptions'>" + quoteOption + "</div>";
+                    break;
+                case "time":
+                    seperateOptions = "<div id = 'seperateOptions'>" + timeOption + "</div>";
+                    break;
+                case "timeAttack":
+                    seperateOptions = "<div id = 'seperateOptions'>" + timeAttackOption + "</div>";
+                    break;
+
+            }
+
+            document.getElementById('seperateOptions').innerHTML = seperateOptions;
+            document.getElementsByName(buttonPressed).item(0).blur();
+
+        }
+        // default colors
+        function defaultColor(nameOfClass, value) {
+            let selectedColor = "rgb(252, 166, 209)";
+            if (mode == "quotes") {
+                value = " " + value + " ";
+            }
+            for (let index = 0; index < document.getElementsByClassName(nameOfClass).length - 1; index++) {
+                let textContentTest = document.getElementsByClassName(nameOfClass).item(index).textContent;
+                if (document.getElementsByClassName(nameOfClass).item(index).textContent == value) {
+                    document.getElementsByClassName(nameOfClass).item(index).style.color = selectedColor;
+                    return;
+                }
+            }
+            document.getElementsByClassName(nameOfClass).item(document.getElementsByClassName(nameOfClass).length - 1).style.color = selectedColor;
+        }
+        function SetDefaultColor() {
+            if (mode == "words") {
+                defaultColor("minorOption", totalNumberOfWords);
+            }
+            else if (mode == "quotes") {
+                defaultColor("minorOption", quoteLength);
+            }
+            else if (mode == "timed") {
+                defaultColor("minorOption", totalSeconds);
+            }
+            else if (mode == "timeAttack") {
+                defaultColor("timeAttackTextOption", totalNumberOfWords);
+                defaultColor("timeAttackSecondsOption", totalSeconds);
+            }
+        }
     </script>
 </head>
 
@@ -239,12 +916,37 @@
     </header>
     <article>
         <div id="options">
-            <button id="option">time</button>
-            <button id="option">word</button>
+
+            <button class="mainOption" id="option" onclick=" SetTextType('words', 'word'),  ChangeOnPress('main', '0')"
+                name='word' style="color: rgb(252, 166, 209);">words </button>
+            <button class="mainOption" id="option" onclick=" SetTextType('quotes', 'quote'), ChangeOnPress('main', '1')"
+                name='quote' )>quotes</button>
+            <button class="mainOption" id="option" onclick=" SetTextType('timed', 'time' ), ChangeOnPress('main', '2')"
+                name='time'>time</button>
+            <button class="mainOption" id="option"
+                onclick=" SetTextType('timeAttack', 'timeAttack'), ChangeOnPress('main', '3')" name='timeAttack'>time
+                attack</button>
+
+            <div id="seperateOptions">
+                <div id="wordOptions">
+                    <button id="option"> 10 </button>
+                    <button id="option"> 25 </button>
+                    <button id="option"> 50 </button>
+                    <button id="option"> 100 </button>
+                </div>
+            </div>
+        </div>
+        <h2 id="counter">0</h2>
+        <div id="firstRowText" class="text">
+            testing testing
+        </div>
+        <div id="secondRowText" class="text">
+            yes
         </div>
 
-        <div id="text">
-            testing testing
+        <button id="reset" onclick="ResetText(randomWordLength)"> &#8634;</button>
+        <div id="stats">
+            wpm: N/A accuracy: N/A%
         </div>
         <div class="keyMap">
             <div class="firstRow">
